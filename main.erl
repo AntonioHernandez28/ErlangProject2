@@ -21,7 +21,26 @@
 % Returns {12, 20}, which means that, the cumulative weight of the items in the knapsack is 12 units,
 % and its profit is 20 units.
 % ============================================
-evaluate(_, {_, _}) -> "Not yet implemented".
+
+
+evaluateFirst([], {_ ,[]}) -> 0; 
+evaluateFirst([H | T], {Y, [{A, _} | P]}) -> if 
+	(H == true) and ((Y - A) >= 0) -> A + evaluateFirst(T, {Y - A, P}); 
+	true -> evaluateFirst(T, {Y, P})
+end.
+
+evaluateSnd([], {_ ,[]}) -> 0; 
+evaluateSnd([H | T], {Y, [{A, B} | P]}) -> if 
+	(H == true) and ((Y - A) >= 0) -> B + evaluateSnd(T, {Y - A, P}); 
+	true -> evaluateSnd(T, {Y, P})
+end.
+
+
+
+
+evaluate([],{}) -> {0,0}; 
+evaluate(H, T) -> {evaluateFirst(H, T), evaluateSnd(H, T)}. 
+
 
 % Generation of random solutions
 %
@@ -31,7 +50,7 @@ evaluate(_, {_, _}) -> "Not yet implemented".
 % 	project:rndSolution(5).
 % Returns a random solution for an instance with five items.
 % ============================================
-rndSolution(_) -> "Not yet implemented".
+rndSolution(_) -> "Not yet implemented xd xd".
 
 % Mutation of solutions
 %
@@ -42,7 +61,20 @@ rndSolution(_) -> "Not yet implemented".
 % Returns a new solution which is slightly different from the one given as argument (the elements
 % are changed with a probability of 0.1).
 % ============================================
-mutate(_, _) -> "Not yet implemented".
+
+
+swap(A) -> if 
+	A == true -> false; 
+	true -> true
+end.
+
+
+mutate([], _) -> [];  
+mutate([H | T], A) -> 
+	case random:uniform() < A of 
+		true -> [swap(H) | mutate(T, A)]; 
+		false -> [H | mutate(T, A)]
+end. 
 
 % Instances
 %
